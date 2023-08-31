@@ -1,4 +1,17 @@
 {
   "page_details": [],
-  "students": []
+  "students": [
+    {
+      "Submitter": "Jonah ",
+      "Partner": "Hill",
+      "Grade": "10",
+      "id": 1
+    },
+    {
+      "Submitter": "Brock ",
+      "Partner": "Lesnar",
+      "Grade": "9",
+      "id": 2
+    }
+  ]
 }
