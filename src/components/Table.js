@@ -42,18 +42,21 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
 
         if (column === 'Submitter') {
             // Perform sorting
-            const sortedData = data.sort((a, b) =>
-                a.Submitter.toLowerCase() < b.Submitter.toLowerCase() ? -1 : 1
+            const sortedData = (sortDirection === 'asc') ? (data.slice().sort((a, b) =>
+                a.Submitter.toLowerCase() < b.Submitter.toLowerCase() ? -1 : 1)) : (data.slice().sort((a, b) =>
+                    a.Submitter.toLowerCase() > b.Submitter.toLowerCase() ? -1 : 1)
             );
+            setData(sortedData);
         }
 
         else {
             // Perform sorting
-            const sortedData = data.sort((a, b) =>
-                a.Partner.toLowerCase() < b.Partner.toLowerCase() ? -1 : 1
+            const sortedData = (sortDirection === 'asc') ? (data.slice().sort((a, b) =>
+                a.Partner.toLowerCase() < b.Partner.toLowerCase() ? -1 : 1)) : (data.slice().sort((a, b) =>
+                    a.Partner.toLowerCase() > b.Partner.toLowerCase() ? -1 : 1)
             );
+            setData(sortedData);
         }
-
     };
 
     return (
@@ -101,8 +104,8 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th onClick={() => { handleSort('Submitter') }}>Submitter</th>
-                        <th onClick={() => { handleSort('Partner') }}>Partner</th>
+                        <th>Submitter<i className="fa-solid fa-sort mx-3" onClick={() => { handleSort('Submitter') }}></i></th>
+                        <th>Partner<i className="fa-solid fa-sort mx-3" onClick={() => { handleSort('Partner') }}></i></th>
                         <th>Grader</th>
                         <th>Delete</th>
                     </tr>
