@@ -1,6 +1,7 @@
 import Table from 'react-bootstrap/Table';
-import { InputGroup, Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { Container, FormControl, InputGroup, Form, Button } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+
 
 function BootstrapTable({ addRow, deleteRow, data, setData }) {
 
@@ -10,6 +11,9 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
 
     const [sortColumn, setSortColumn] = useState('Submitter');
     const [sortDirection, setSortDirection] = useState('asc');
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredResults, setFilteredResults] = useState([]);
 
     const handleSubmitterChange = (e) => {
         setSubmitter(e.target.value);
@@ -59,9 +63,42 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
         }
     };
 
+    const handleSearch = event => {
+        const newSearchTerm = event.target.value;
+        setSearchTerm(newSearchTerm);
+
+        const filteredResults = (data.slice().filter(item =>
+            item.Submitter.toLowerCase().includes(newSearchTerm.toLowerCase()) || item.Partner.toLowerCase().includes(newSearchTerm.toLowerCase())));
+
+        if (newSearchTerm.length > 0) {
+            setFilteredResults(filteredResults)
+        }
+        else {
+            setFilteredResults(data);
+        }
+
+    };
+
+    useEffect(() => {
+        setFilteredResults(data);
+    }, [data]);
+
     return (
         <>
+            <Form className="d-flex flex-column">
+                <h3>Search For Student</h3>
+                <FormControl
+                    type="search"
+                    placeholder="Search"
+                    className="my-2"
+                    aria-label="Search"
+                    value={searchTerm}
+                    onChange={handleSearch}
+
+                />
+            </Form>
             <Form className="my-3" onSubmit={handleSubmit}>
+                <h3>Add a Student</h3>
                 <div className='d-flex gap-3'>
                     <InputGroup className="mb-3">
                         <InputGroup.Text id="inputGroup-sizing-default">
@@ -101,6 +138,8 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
                 </div>
                 <button className='btn btn-secondary'>Submit</button>
             </Form>
+
+            <h3 className='mt-5'>List of Students</h3>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -111,7 +150,7 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row) => (
+                    {filteredResults.map((row) => (
                         // console.log("row", row),
                         < tr key={row.id} >
                             <td>{row.Submitter}</td>

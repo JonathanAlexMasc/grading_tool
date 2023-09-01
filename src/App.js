@@ -48,7 +48,12 @@ function App() {
   }
 
   return (
-    <Container>
+    <Container className='p-4'>
+
+      <div className='d-flex flex-column align-items-center mt-2 mb-3'>
+        <h2>Student Grades for CSC 170!</h2>
+        <h5>Hello, I built this tool using react and bootstrap in order to simplify the grading process for CSC 170, a class for which I am currently a teaching asistant.</h5>
+      </div>
 
       <BootstrapTable addRow={addRow} deleteRow={deleteRow} data={data} setData={setData} />
 
