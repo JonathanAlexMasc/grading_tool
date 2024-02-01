@@ -1,9 +1,10 @@
 import Table from 'react-bootstrap/Table';
-import { Container, FormControl, InputGroup, Form, Button } from 'react-bootstrap';
+import { FormControl, InputGroup, Form, Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-
+import React from 'react';
 
 function BootstrapTable({ addRow, deleteRow, data, setData }) {
+    const inputRef = React.useRef(null);
 
     const [Submitter, setSubmitter] = useState('');
     const [Partner, setPartner] = useState('');
@@ -29,6 +30,7 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        inputRef.current.focus();
         addRow(Submitter, Partner, Grade);
         setSubmitter('');
         setPartner('');
@@ -53,6 +55,15 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
             setData(sortedData);
         }
 
+        else if (column === 'Grades') {
+            // Perform sorting
+            const sortedData = (sortDirection === 'asc') ? (data.slice().sort((a, b) =>
+                a.Grade < b.Grade ? -1 : 1)) : (data.slice().sort((a, b) =>
+                    a.Grade > b.Grade ? -1 : 1)
+            );
+            setData(sortedData);
+        }
+
         else {
             // Perform sorting
             const sortedData = (sortDirection === 'asc') ? (data.slice().sort((a, b) =>
@@ -61,6 +72,7 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
             );
             setData(sortedData);
         }
+
     };
 
     const handleSearch = event => {
@@ -100,11 +112,12 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
             <Form className="my-3" onSubmit={handleSubmit}>
                 <h3>Add a Student</h3>
                 <div className='d-flex gap-3'>
-                    <InputGroup className="mb-3">
+                    <InputGroup className="mb-3" ref={inputRef}>
                         <InputGroup.Text id="inputGroup-sizing-default">
                             Submitter
                         </InputGroup.Text>
                         <Form.Control
+                            ref={inputRef}
                             aria-label="Default"
                             aria-describedby="inputGroup-sizing-default"
                             onChange={handleSubmitterChange}
@@ -145,7 +158,7 @@ function BootstrapTable({ addRow, deleteRow, data, setData }) {
                     <tr>
                         <th>Submitter<i className="fa-solid fa-sort mx-3" onClick={() => { handleSort('Submitter') }}></i></th>
                         <th>Partner<i className="fa-solid fa-sort mx-3" onClick={() => { handleSort('Partner') }}></i></th>
-                        <th>Grader</th>
+                        <th>Grader<i className="fa-solid fa-sort mx-3" onClick={() => { handleSort('Grades') }}></i></th>
                         <th>Delete</th>
                     </tr>
                 </thead>
