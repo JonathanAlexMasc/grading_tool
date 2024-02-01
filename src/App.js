@@ -47,18 +47,57 @@ function App() {
     setData(updatedStudents);
   }
 
-  return (
-    <Container className='p-4'>
+  const handleGenClick = async () => {
 
+    const sampleData = [
+      { submit_person: 'John Doe', other_person: 'Jane Doe', the_grade: 85 },
+      { submit_person: 'Alice Smith', other_person: 'Bob Johnson', the_grade: 92 },
+      { submit_person: 'Eva Williams', other_person: 'Mike Brown', the_grade: 78 },
+      { submit_person: 'Chris Davis', other_person: 'Emma White', the_grade: 88 },
+      { submit_person: 'Olivia Martinez', other_person: 'Daniel Wilson', the_grade: 95 },
+      { submit_person: 'Sam Taylor', other_person: 'Sophie Miller', the_grade: 70 },
+      { submit_person: 'William Moore', other_person: 'Lily Davis', the_grade: 89 },
+      { submit_person: 'Ava Anderson', other_person: 'James Jackson', the_grade: 93 },
+      { submit_person: 'Noah Taylor', other_person: 'Grace Robinson', the_grade: 81 },
+      { submit_person: 'Sophia Lee', other_person: 'Ryan Hall', the_grade: 76 },
+      // Add more sample data as needed
+    ];
+
+    // Use Promise.all to make multiple requests in parallel
+    const postRequests = sampleData.map(async (entry) => {
+      const response = await axios.post('http://localhost:3001/students', {
+        Submitter: entry.submit_person,
+        Partner: entry.other_person,
+        Grade: entry.the_grade
+      });
+
+      return response.data;
+    });
+
+    // Wait for all POST requests to complete
+    const newSampleData = await Promise.all(postRequests);
+
+    // Update state with the new sample data
+    const updatedData = [...data, ...newSampleData];
+    setData(updatedData);
+  };
+
+
+  return (
+    <Container className='p-6 gap-3'>
       <div className='d-flex flex-column align-items-center mt-2 mb-3'>
-        <h2>Student Grades for CSC 170!</h2>
-        <h5>Hello, I built this tool using react and bootstrap in order to simplify the grading process for CSC 170, a class for which I am currently a teaching asistant.</h5>
+        <h2>Grading Tool for CS 170 - Programming for Engineers and Scientists</h2>
       </div>
 
-      <BootstrapTable addRow={addRow} deleteRow={deleteRow} data={data} setData={setData} />
+      <div className='d-flex justify-content-center'>
+        <Button onClick={handleGenClick}>Generate Sample Data</Button>
+      </div>
+
+      <BootstrapTable addRow={addRow} deleteRow={deleteRow} data={data} setData={setData} className='p-3' />
 
       <Button variant='danger' onClick={handleClear}>Clear Entries</Button>
-    </Container >
+    </Container>
+
   );
 }
 
